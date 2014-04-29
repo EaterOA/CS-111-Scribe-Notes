@@ -1,13 +1,63 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <title>Lecture 9 Scribe Notes</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
 <link rel="stylesheet" type="text/css" href="/styles.css" />
+
 </head>
+
 <body>
-<header><h2><p align="center">Computer Science 111<br>
-Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h2></p>
+
+
+
+<header><h1><p align="center">Computer Science 111<br>
+Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
 <p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left"></header>
+<section>
+<h2>Scheduling Metrics</h2>
+<p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of possible methods. What is important is 
+that we balance their various trade-offs and choose the best method for our needs. But how do we quantify the effectiveness of a scheduling policy in the first place?
+</p>
+<p>
+One way is to use well-defined metrics. Just as we have taken inspiration from the auto industry in designing schedulers, we can also model our policies and metrics 
+similarly. In this case, we can think of a <b>CPU</b> like a single <b>factory</b>, and the <b>processes</b> like <b>cars</b> to be built.
+</p>
+<h3><i>Model</i></h3>
+<p>First, some assumptions. In this model, we adhere to these rules:</p>
+<ul>
+<li>There is only <b>one CPU</b> that can execute at most <b>one process</b> at any given time
+<li>Memory is not an issue
+<li>Processes arrive at arbitrary times and in arbitrary order
+</ul>
+<p>Here is a pictorial representation of some metrics we can derive from this model:<br><br>
+
+[ Image of timeline for stages of a process ]<br><br>
+
+The sequence of events proceeds as thus:</p>
+<ol>
+<li>The process registers with the scheduler.<br>
+<li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this wait time can range from zero to infinity 
+depending on the policy.
+<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the response time.</li>
+<ul>
+<li>NOTE: The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and 
+performing its job. An example of this is a load or splash screen for a slow application.</li></ul>
+<li>The process finishes. The time it takes to get from Step #1 to here is the turnaround time. The time it takes to get from Step #2 to here is the run time. In other
+words: turnaround time = run time + wait time.
+<li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the context switch time. More generally, 
+a context switch occurs whenever the CPU stops doing one job and takes up another, not necessarily from the conclusion of one to the commencement of another.
+</ol>
+<p>These metrics are used to measure efficiency for a single process. Modern CPUs must juggle hundreds of processes, so it would be more useful to look at some 
+aggregate metrics instead. Some of these are:</p>
+<ul>
+<li>Average wait, response, and turnaround times
+<li>Max wait, response, and turnaround times
+<li>Utilization, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.
+<li>Throughput, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</ul></section>
 </body>
 </html>
