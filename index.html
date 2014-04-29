@@ -69,52 +69,7 @@ However, this increases wait time for other processes.
 
 However, this lowers utilization.
 </ul>
-<h3><i>Hard Real-Time Policies</i></h3>
-<p>For systems in which process turnaround may mean life or death rather than just inconvenience 
-
-(for instance, a nuclear power plant), a best-effort scheduler is not enough. Such systems often 
-
-employ a hard real-time scheduler. The exact implementations vary and are unimportant; in 
-
-general they have these characteristics:</p>
-<ul>
-<li>Process deadlines cannot be missed. Failure to complete a task within an alloted time 
-
-represents total system failure. Thus, turnaround time is heavily favored over every other 
-
-metric.
-<li>Their performance must be predictable. To accomplish this, such schedulers typically:</li>
-<ul>
-<li>Disable caching, because caches can cause dramatic variation in runtime
-<li>Use polling instead of interrupts, because asynchronicity is too unpredictable</ul>
-<li>Extremely application-specific
-</ul>
-<h3><i>Soft Real-Time Policies</i></h3>
-<p>
-As opposed to hard real-time, soft real-time systems can tolerate some missed deadlines, but 
-
-at the expense of degraded user experience. An example usage is in smartphones. Here are 
-
-some characteristics of soft real-time systems:
-</p>
-<ul>
-<li>They often need to run multiple concurrent, periodic jobs each with their own deadline.
-<li>Jobs, or small aspects of them, can be cancelled without too much cost.
-<li>They are more generalized than hard real-time systems</ul>
-<p>An example application would be watching a video on a smartphone. The phone must handle 
-
-periodic frame rendering and background wi-fi scanning as thus:<br><br>
-
-[ Image of blocks of video frames over blocks of wifi scanning ]<br><br>
-
-Ideally, every frame and scan are performed on time. Occasionally missing one of two blocks 
-
-may degrade experience, but is not destructive. Some policies might include:
-<ul>
-<li>Earliest deadline first, where job deadlines is the sole dealbreaker
-<li>Priority-based, giving weight to factors other than just deadlines
-<li>Rate-monotonic scheduling, where small, frequently-run tasks are given higher priority to run
-</ul></section>
+</section>
 <section>
 <h2>Scheduling Policies</h2>
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
@@ -219,6 +174,53 @@ Priority = niceness + total CPU time + (- time since the last run)
 </p>
 <p>Niceness is a utility property that is used to determine a priority level to assign to a process, though it is not the only factor. Its general default value is 0. A user can change a process’s niceness through the nice command to improve performance on a specific process.
 Because the scheduler relies on the total CPU time and the time since the last run, it is not entirely a best-effort scheduler, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
+
+<h3><i>Hard Real-Time Policies</i></h3>
+<p>For systems in which process turnaround may mean life or death rather than just inconvenience 
+
+(for instance, a nuclear power plant), a best-effort scheduler is not enough. Such systems often 
+
+employ a hard real-time scheduler. The exact implementations vary and are unimportant; in 
+
+general they have these characteristics:</p>
+<ul>
+<li>Process deadlines cannot be missed. Failure to complete a task within an alloted time 
+
+represents total system failure. Thus, turnaround time is heavily favored over every other 
+
+metric.
+<li>Their performance must be predictable. To accomplish this, such schedulers typically:</li>
+<ul>
+<li>Disable caching, because caches can cause dramatic variation in runtime
+<li>Use polling instead of interrupts, because asynchronicity is too unpredictable</ul>
+<li>Extremely application-specific
+</ul>
+<h3><i>Soft Real-Time Policies</i></h3>
+<p>
+As opposed to hard real-time, soft real-time systems can tolerate some missed deadlines, but 
+
+at the expense of degraded user experience. An example usage is in smartphones. Here are 
+
+some characteristics of soft real-time systems:
+</p>
+<ul>
+<li>They often need to run multiple concurrent, periodic jobs each with their own deadline.
+<li>Jobs, or small aspects of them, can be cancelled without too much cost.
+<li>They are more generalized than hard real-time systems</ul>
+<p>An example application would be watching a video on a smartphone. The phone must handle 
+
+periodic frame rendering and background wi-fi scanning as thus:<br><br>
+
+[ Image of blocks of video frames over blocks of wifi scanning ]<br><br>
+
+Ideally, every frame and scan are performed on time. Occasionally missing one of two blocks 
+
+may degrade experience, but is not destructive. Some policies might include:
+<ul>
+<li>Earliest deadline first, where job deadlines is the sole dealbreaker
+<li>Priority-based, giving weight to factors other than just deadlines
+<li>Rate-monotonic scheduling, where small, frequently-run tasks are given higher priority to run
+</ul>
 </section>
 <section>
 <h2>Synchronization</h2>
@@ -255,8 +257,8 @@ balance = melinda_temp;<br>
 <p>[ Image of two threads performing actions independently ]
 </p>
 <p>For an observable behavior to be serializable, we should be able to explain events as if they were done sequentially. Two possible sequence of events for the above might be:
-<br>t -> A1, A4, A5, A2, A6, A3, A3
-<br>t -> A1, A4, A2, A5, A6, A3, A3<br>
+<br>t → A1, A4, A5, A2, A6, A3, A3
+<br>t → A1, A4, A2, A5, A6, A3, A3<br>
 Either explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
 </p>
 <p>One way to obtain serializability is to use atomicity. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
