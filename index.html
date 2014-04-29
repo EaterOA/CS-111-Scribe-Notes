@@ -85,16 +85,16 @@ In an FCFS model, every process runs in the order that they are fed to the sched
 Having the CPU switch processes also takes an overhead time; this is denoted by δ.<br><br>
 <img src="fcfs.png" alt="FCFS timeline" /><br><br>
 What does each wait time look like?<br><br>
-Process A: First process, so wait time is 0<br>
+Process A: First process, so wait time is <b>0</b><br>
 Process B: Total time from A + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 4 + δ<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>4 + δ</b><br><br>
 Process C: Total time from B + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 5 + 2δ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>5 + 2δ</b><br>
 Process D: Total time from C + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 13 + 3δ<br><br>
-Average wait time: 5.5 + 1.5δ<br>
-Average turnaround time: 10.5 + 1.5δ<br>
-Average response time: 7.5 + 1.5δ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>13 + 3δ</b><br><br>
+Average wait time: <b>5.5 + 1.5δ</b><br>
+Average turnaround time: <b>10.5 + 1.5δ</b><br>
+Average response time: <b>7.5 + 1.5δ</b><br>
 </p>
 <p>Pros:
 <ul>
@@ -119,19 +119,19 @@ Using the previous example:
 Wait times:
 <br><br>
 Process A: First process;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 0<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>0</b><br><br>
 Process B: Total Process A time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait =  4 + δ
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait =  <b>4 + δ</b>
 <br><br>
 Process D: Total Process B time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 4 + 2δ
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>4 + 2δ</b>
 <br><br>
 Process C: Total process D time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 9 + 3δ
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>9 + 3δ</b>
 <br><br>
-Average wait time: 4.25 + 1.5δ<br>
-Average turnout time: 9.25 + 1.5δ<br>
-Average response time: 6.25 + 1.5δ<br>
+Average wait time: <b>4.25 + 1.5δ</b><br>
+Average turnout time: <b>9.25 + 1.5δ</b><br>
+Average response time: <b>6.25 + 1.5δ</b><br>
 Pros:
 <ul>
 <li>Faster average wait, turnout, and response times when compared to FCFS scheduling
