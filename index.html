@@ -57,7 +57,105 @@ aggregate metrics instead. Some of these are:</p>
 <ul>
 <li>Average wait, response, and turnaround times
 <li>Max wait, response, and turnaround times
-<li>Utilization, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.
-<li>Throughput, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</ul></section>
+<li>Utilization, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of 
+non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.
+<li>Throughput, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an 
+influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</ul>
+<p>
+A scheduler chooses what metrics to prioritize. We often see a waterbed effect develop when choosing policies. For instance:</p>
+<ul>
+<li>Utilization can be increased by disabling preemption and focusing on one job at a time.
+
+However, this increases wait time for other processes.
+<li>Conversely, frequent preemption leads to lower wait time, but lower utilization.
+<li>Wait time can be lowered by switching to new processes as soon as they arrive.
+
+However, this lowers utilization.
+</ul>
+<h3><i>Hard Real-Time Policies</i></h3>
+<p>For systems in which process turnaround may mean life or death rather than just inconvenience 
+
+(for instance, a nuclear power plant), a best-effort scheduler is not enough. Such systems often 
+
+employ a hard real-time scheduler. The exact implementations vary and are unimportant; in 
+
+general they have these characteristics:</p>
+<ul>
+<li>Process deadlines cannot be missed. Failure to complete a task within an alloted time 
+
+represents total system failure. Thus, turnaround time is heavily favored over every other 
+
+metric.
+<li>Their performance must be predictable. To accomplish this, such schedulers typically:</li>
+<ul>
+<li>Disable caching, because caches can cause dramatic variation in runtime
+<li>Use polling instead of interrupts, because asynchronicity is too unpredictable</ul>
+<li>Extremely application-specific
+</ul>
+<h3><i>Soft Real-Time Policies</i></h3>
+<p>
+As opposed to hard real-time, soft real-time systems can tolerate some missed deadlines, but 
+
+at the expense of degraded user experience. An example usage is in smartphones. Here are 
+
+some characteristics of soft real-time systems:
+</p>
+<ul>
+<li>They often need to run multiple concurrent, periodic jobs each with their own deadline.
+<li>Jobs, or small aspects of them, can be cancelled without too much cost.
+<li>They are more generalized than hard real-time systems</ul>
+<p>An example application would be watching a video on a smartphone. The phone must handle 
+
+periodic frame rendering and background wi-fi scanning as thus:<br><br>
+
+[ Image of blocks of video frames over blocks of wifi scanning ]<br><br>
+
+Ideally, every frame and scan are performed on time. Occasionally missing one of two blocks 
+
+may degrade experience, but is not destructive. Some policies might include:
+<ul>
+<li>Earliest deadline first, where job deadlines is the sole dealbreaker
+<li>Priority-based, giving weight to factors other than just deadlines
+<li>Rate-monotonic scheduling, where small, frequently-run tasks are given higher priority to run
+</ul></section>
+<section>
+<h2>Scheduling Policies</h2>
+<p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
+</p>
+<p>A scheduler should address the problem of starvation, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
+</p>
+<div><p>Some common policies are as follows:<br><br>
+<b><u>Policy 1:</u></b> <i>The First-Come-First-Serve</i> <b>(FCFS)</b> Policy:<br><br>
+In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the arrival time as the determining metric.
+</p>
+<p><u>Example:</u><br><br>
+[Insert table of processes with runtime, arrival time, and response time]<br><br>
+Having the CPU switch processes also takes an overhead time; this is denoted by δ.<br><br>
+←----------- Insert timeline of process runtimes--------------><br><br>
+What does each wait time look like?<br><br>
+Process A: First process, so wait time is 0<br>
+Process B: Total time from A + Context switching;<br>
+&nbsp;&nbsp;&nbsp;Total wait time is 4 + δ<br><br>
+Process C: Total time from B + Context switching;<br>
+&nbsp;&nbsp;&nbsp;Total wait time is 5 + 2δ<br>
+Process D: Total time from C + Context switching;<br>
+&nbsp;&nbsp;&nbsp;Total wait time is 13 + 3δ<br><br>
+Average wait time: 5.5 + 1.5δ<br>
+Average turnaround time: 10.5 + 1.5δ<br>
+Average response time: 7.5 + 1.5δ<br>
+</p>
+<p>Pros:
+<ul>
+<li>Because each process finishes before a context switch occurs, the total overhead time is minimized given multiple processes. No extra context switches are needed other than the initial on for every process.
+<li>In addition, because context switches are only done after the process is finished, starvation never occurs in a FCFS scheduler, assuming no pre-emption is done. 
+</ul>
+Cons:
+<ul>
+<li>Average wait times may be very long depending on the order of arrival and the total runtime of each process. For instance, if an extremely long process precedes a number of short processes, each of the short processes needs to wait for the long process to finish before running, increasing the average wait time.
+<li>Similarly, average response and overhead time may not be optimal as well, if the long process is placed before a number of short ones.
+</ul>
+How can we improve on the average wait, turnout, and response times? 
+</p></div>
+</section>
 </body>
 </html>
