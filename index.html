@@ -81,9 +81,9 @@ However, this lowers utilization.
 In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the arrival time as the determining metric.
 </p>
 <p><u>Example:</u><br><br>
-[Insert table of processes with runtime, arrival time, and response time]<br><br>
+<img src="chart.png" alt="Process statistics" /><br><br>
 Having the CPU switch processes also takes an overhead time; this is denoted by δ.<br><br>
-←----------- Insert timeline of process runtimes--------------><br><br>
+<img src="fcfs.png" alt="FCFS timeline" /><br><br>
 What does each wait time look like?<br><br>
 Process A: First process, so wait time is 0<br>
 Process B: Total time from A + Context switching;<br>
@@ -114,9 +114,7 @@ A shortest job first scheduler schedules new items into the queue based on the t
 <br><br>
 Using the previous example:
 <br><br>
-[Insert same table of processes with runtime, arrival time, and response time as first example]
-<br><br>
-←----------- Insert timeline of process runtimes (SJF scheduled)-------------->
+<img src="sjf.png" alt="SJF timeline" />
 <br><br>
 Wait times:
 <br><br>
@@ -149,7 +147,7 @@ The Round Robin strategy employs the use of <b>preemption</b>, in which the sche
 <br><br>
 Using the previous example again:
 <br><br>
-[Insert picture of Round Robin schedule]
+<img src="roundrobin.png" alt="RR timeline" />
 <br><br>
 At the end, no context switching needs to be done since all other processes are finished.
 <br><br>
