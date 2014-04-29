@@ -12,9 +12,6 @@
 </head>
 
 <body>
-
-
-
 <header><h1><p align="center">Computer Science 111<br>
 Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
 <p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left"></header>
@@ -135,11 +132,11 @@ Having the CPU switch processes also takes an overhead time; this is denoted by 
 What does each wait time look like?<br><br>
 Process A: First process, so wait time is 0<br>
 Process B: Total time from A + Context switching;<br>
-&nbsp;&nbsp;&nbsp;Total wait time is 4 + δ<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 4 + δ<br><br>
 Process C: Total time from B + Context switching;<br>
-&nbsp;&nbsp;&nbsp;Total wait time is 5 + 2δ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 5 + 2δ<br>
 Process D: Total time from C + Context switching;<br>
-&nbsp;&nbsp;&nbsp;Total wait time is 13 + 3δ<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is 13 + 3δ<br><br>
 Average wait time: 5.5 + 1.5δ<br>
 Average turnaround time: 10.5 + 1.5δ<br>
 Average response time: 7.5 + 1.5δ<br>
@@ -156,6 +153,114 @@ Cons:
 </ul>
 How can we improve on the average wait, turnout, and response times? 
 </p></div>
+<div>
+<b><u>Policy 2:</u></b> <i>The Shortest Job First</i> <b>(SJF)</b> Policy:<br><br>
+A shortest job first scheduler schedules new items into the queue based on the total runtime of the process. If there are other existing processes waiting that have a longer runtime than the new one, then the new process will be scheduled before the longer, older ones, giving it more priority.
+<br><br>
+Using the previous example:
+<br><br>
+[Insert same table of processes with runtime, arrival time, and response time as first example]
+<br><br>
+←----------- Insert timeline of process runtimes (SJF scheduled)-------------->
+<br><br>
+Wait times:
+<br><br>
+Process A: First process;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 0<br><br>
+Process B: Total Process A time + Context Switching<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait =  4 + δ
+<br><br>
+Process D: Total Process B time + Context Switching<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 4 + 2δ
+<br><br>
+Process C: Total process D time + Context Switching<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = 9 + 3δ
+<br><br>
+Average wait time: 4.25 + 1.5δ<br>
+Average turnout time: 9.25 + 1.5δ<br>
+Average response time: 6.25 + 1.5δ<br>
+Pros:
+<ul>
+<li>Faster average wait, turnout, and response times when compared to FCFS scheduling
+</ul>
+Cons:
+<ul>
+<li>Possible fairness problem that can cause starvation; what if the scheduler receives a large amount of smaller processes when there is already a large process waiting? Due to the SJF scheduler, all of the smaller processes would first be processed, leaving the larger process hanging. It is possible that this larger process never finishes, hence resulting in a starvation issue.
+</ul>
+</div>
+<div>
+<b><u>Policy 3:</u></b> <i>The Round Robin</i> Policy:<br><br>
+The Round Robin strategy employs the use of <b>preemption</b>, in which the scheduler temporarily interrupts one process and switches to another. It combines this with a FCFS model and constantly switches between processes as they are added to the scheduler. The scheduler switches the CPU to another process after every time interval, and includes any new incoming processes in the rotation after it finishes a cycle.
+<br><br>
+Using the previous example again:
+<br><br>
+[Insert picture of Round Robin schedule]
+<br><br>
+At the end, no context switching needs to be done since all other processes are finished.
+<br><br>
+Pros:
+<ul>
+<li>No starvation occurs in this policy since the scheduler is constantly rotating between all processes, not leaving any single process unattended to.
+<li>Low average wait times because all processes are reached at least once in the round trip before doing the same again. In this scenario, the average wait time for all processes is 1 + 2.5δ, much lower than the two previous policies.
+</ul>
+Cons:
+<ul>
+<li>Because so much switching is done in the scheduler, a large amount of overhead from context switching is present. Each time the scheduler makes a switch, the overhead time needs to be considered in the total run time.
+</ul>
+</div>
+<b><u>Priority Scheduling</u></b>
+<p>
+There are different ways of gauging which item to schedule first. The convention by which a process is measured against another in order to determine order is its priority. A low-valued priority can mean that it is scheduled first or that it is scheduled last. For convention, we will say that a lower value priority means that it will be scheduled first.
+
+Priority does not necessarily have to consist of a single factor that determines whether a process is scheduled before another, such as run time. It can comprise of several different aspects. For instance, the Linux scheduler has the following formula to compute priority:
+</p>
+<p align="center">
+Priority = niceness + total CPU time + (- time since the last run)
+</p>
+<p>Niceness is a utility property that is used to determine a priority level to assign to a process, though it is not the only factor. Its general default value is 0. A user can change a process’s niceness through the nice command to improve performance on a specific process.
+Because the scheduler relies on the total CPU time and the time since the last run, it is not entirely a best-effort scheduler, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
+</section>
+<section>
+<h2>Synchronization</h2>
+<h3><i>Problem</i></h3>
+<p>Synchronization is the biggest problem in a multi-threaded application. We need a way for processes to join together at some point, and to make sure that they do not execute the same parts of a program at the same time.
+</p>
+<p>Unfortunately, the default behavior for processes is unsynchronized, which leads to race conditions. This is an issue because race conditions are notoriously hard to debug. It is difficult to catch the problem automatically, given that they are so rare and intermittent. It is possible to run code thousands of times without fail only for it to break on the 1001th time due to a race condition. We want to be able to avoid race conditions, but we also want to do so using an efficient, non-intrusive, and clear method.
+</p>
+<p>Consider an example in which Bill Gates and Melinda Gates are accessing their bank account simultaneously at different locations. Bill makes a deposit and Melinda withdraws like thus:
+</p>
+<p>
+Bill:<br>
+balance += deposit;<br>
+
+Melinda:<br>
+balance -= withdraw;<br>
+</p>
+<p>There is a race condition here. Hypothetically, it is possible for both to read the same balance at the same time, and depending on whose transaction occurs last, one of them will be nullified. For instance the following logical sequence of events may be executed:
+</p>
+<p>
+int bill_temp = balance + deposit;<br>
+int melinda_temp = balance - withdraw;<br>
+balance = bill_temp;<br>
+balance = melinda_temp;<br>
+</p>
+<p>This is a problem with multi-threading. Even in a single-threaded application however, the existence of signals can also cause the same problems.</p>
+<h3><i>Solution</i></h3>
+<p>Now that we know the problem, we need some way to resolve it. One possible option is to use locks. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect critical sections, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
+</p>
+<p>Locks are nice conceptually, but they have certain pitfalls associated with them. Suppose a bank wants to be able to audit its accounts, which may take a long time. If it obtains a global lock, then during that time no customers will be able to access their money. What about if we just lock on a per-account basis? Then actions like transfer which requires multiple locks may give rise to deadlocking issues, in which two agents refuse to yield their locks to each other.
+</p>
+<p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for serializability. Consider the following:
+</p>
+<p>[ Image of two threads performing actions independently ]
+</p>
+<p>For an observable behavior to be serializable, we should be able to explain events as if they were done sequentially. Two possible sequence of events for the above might be:
+<br>t -> A1, A4, A5, A2, A6, A3, A3
+<br>t -> A1, A4, A2, A5, A6, A3, A3<br>
+Either explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
+</p>
+<p>One way to obtain serializability is to use atomicity. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
+</p>
 </section>
 </body>
 </html>
