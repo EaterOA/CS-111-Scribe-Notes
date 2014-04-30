@@ -21,8 +21,23 @@ Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
 <div style="border: 3px solid black; display:inline-block; padding-right: 20px;">
 <ol>
 <li><a href="#met" title="Metrics Link">Scheduling Metrics</a>
+<ul>
+<li><a href="#model" title="Subsection Model Link">Model</a></li>
+</ul>
 <li><a href="#pol" title="Policies Link">Scheduling Policies</a>
+<ul>
+<li><a href="#fcfs" title="fcfs Link">First Come First Serve Policy</a>
+<li><a href="#sjf" title="sjf Link">Shortest Job First Policy</a>
+<li><a href="#rr" title="rr Link">Round Robin Policy</a>
+<li><a href="#priority" title="priorty Link">Priority Scheduling</a>
+<li><a href="#hard" title="hard Link">Hard Real-Time Policies</a>
+<li><a href="#soft" title="soft Link">Soft Real-Time Policies</a>
+</ul>
 <li><a href="#syn" title="Synch Link">Synchronization</a>
+<ul>
+<li><a href="#problem" title="Problem Link">Problem</a>
+<li><a href="#solution" title="Solution Link">Solution</a>
+</ul>
 </ol>
 </div></nav></header>
 <section>
@@ -36,6 +51,7 @@ that we balance their various trade-offs and choose the best method for our need
 One way is to use well-defined metrics. Just as we have taken inspiration from the auto industry in designing schedulers, we can also model our policies and metrics 
 similarly. In this case, we can think of a <b>CPU</b> like a single <b>factory</b>, and the <b>processes</b> like <b>cars</b> to be built.
 </p>
+<a name="model">
 <h3><i>Model</i></h3>
 <p>First, some assumptions. In this model, we adhere to these rules:</p>
 <ul>
@@ -91,6 +107,7 @@ However, this lowers utilization.
 <p>A scheduler should address the problem of <b>starvation</b>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
 </p>
 <div><p>Some common policies are as follows:<br><br>
+<a name="fcfs">
 <b><u>Policy 1:</u></b> <i>The First-Come-First-Serve</i> <b>(FCFS)</b> Policy:<br><br>
 In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the <u>arrival time</u> as the determining metric.
 </p>
@@ -123,6 +140,7 @@ Cons:
 How can we improve on the average wait, turnout, and response times? 
 </p></div>
 <div>
+<a name="sjf">
 <b><u>Policy 2:</u></b> <i>The Shortest Job First</i> <b>(SJF)</b> Policy:<br><br>
 A shortest job first scheduler schedules new items into the queue based on the total runtime of the process. If there are other existing processes waiting that have a longer runtime than the new one, then the new process will be scheduled before the longer, older ones, giving it more priority.
 <br><br>
@@ -156,6 +174,7 @@ Cons:
 </ul>
 </div>
 <div>
+<a name="rr">
 <b><u>Policy 3:</u></b> <i>The Round Robin</i> Policy:<br><br>
 The Round Robin strategy employs the use of <b>preemption</b>, in which the scheduler temporarily interrupts one process and switches to another. It combines this with a FCFS model and constantly switches between processes as they are added to the scheduler. The scheduler switches the CPU to another process after every time interval, and includes any new incoming processes in the rotation after it finishes a cycle.
 <br><br>
@@ -175,6 +194,7 @@ Cons:
 <li>Because so much switching is done in the scheduler, a <b>large amount of overhead</b> from context switching is present. Each time the scheduler makes a switch, the overhead time needs to be considered in the total run time.
 </ul>
 </div>
+<a name="priority">
 <b><u>Priority Scheduling</u></b>
 <p>
 There are different ways of gauging which item to schedule first. The convention by which a process is measured against another in order to determine order is its <b>priority</b>. A low-valued priority can mean that it is scheduled first or that it is scheduled last. For convention, we will say that a lower value priority means that it will be scheduled first.
@@ -186,7 +206,7 @@ Priority = niceness + total CPU time + (- time since the last run)
 </p>
 <p>Niceness is a utility property that is used to determine a priority level to assign to a process, though it is not the only factor. Its general default value is 0. A user can change a process’s niceness through the nice command to improve performance on a specific process.
 Because the scheduler relies on the total CPU time and the time since the last run, it is <b>not entirely a best-effort scheduler</b>, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
-
+<a name="hard">
 <h3><i>Hard Real-Time Policies</i></h3>
 <p>For systems in which process turnaround may mean life or death rather than just inconvenience 
 
@@ -207,6 +227,7 @@ metric.
 <li>Use polling instead of interrupts, because asynchronicity is too unpredictable</ul>
 <li>Extremely application-specific
 </ul>
+<a name="soft">
 <h3><i>Soft Real-Time Policies</i></h3>
 <p>
 As opposed to hard real-time, soft real-time systems can tolerate some missed deadlines, but 
@@ -238,6 +259,7 @@ may degrade experience, but is not destructive. Some policies might include:
 <a name="syn">
 <h2 style="margin-bottom: 0px">Synchronization</h2>
 <a href="#top" title="" style="font-size=50%">Back to Top</a>
+<a name="problem">
 <h3><i>Problem</i></h3>
 <p>Synchronization is the biggest problem in a multi-threaded application. We need a way for processes to join together at some point, and to make sure that they do not execute the same parts of a program at the same time.
 </p>
@@ -261,6 +283,7 @@ balance = bill_temp;<br>
 balance = melinda_temp;<br>
 </p>
 <p>This is a problem with multi-threading. Even in a single-threaded application however, the existence of signals can also cause the same problems.</p>
+<a name="solution">
 <h3><i>Solution</i></h3>
 <p>Now that we know the problem, we need some way to resolve it. One possible option is to use <span style="color: blue"><b>locks</b></span>. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect <span style="color: blue"><b>critical sections</b></span>, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
 </p>
