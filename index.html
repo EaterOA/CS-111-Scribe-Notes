@@ -16,14 +16,19 @@
 Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
 <p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left">
 <nav>
+<a name="top">
+<h2 style="margin-bottom: 0px">Table of Contents</h2>
+<div style="border: 3px solid black; display:inline-block; padding-right: 20px;">
 <ol>
 <li><a href="#met" title="Metrics Link">Scheduling Metrics</a>
 <li><a href="#pol" title="Policies Link">Scheduling Policies</a>
 <li><a href="#syn" title="Synch Link">Synchronization</a>
-</ol></nav></header>
+</ol>
+</div></nav></header>
 <section>
 <a name="met">
-<h2>Scheduling Metrics</h2>
+<h2 style="margin-bottom: 0px">Scheduling Metrics<br></h2>
+<a href="#top" title="" style="font-size=50%">Back to Top</a>
 <p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of possible methods. What is important is 
 that we balance their various trade-offs and choose the best method for our needs. But how do we quantify the effectiveness of a scheduling policy in the first place?
 </p>
@@ -79,7 +84,8 @@ However, this lowers utilization.
 </section>
 <section>
 <a name="pol">
-<h2>Scheduling Policies</h2>
+<h2 style="margin-bottom: 0px">Scheduling Policies</h2>
+<a href="#top" title="" style="font-size=50%">Back to Top</a>
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
 </p>
 <p>A scheduler should address the problem of <b>starvation</b>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
@@ -230,7 +236,8 @@ may degrade experience, but is not destructive. Some policies might include:
 </section>
 <section>
 <a name="syn">
-<h2>Synchronization</h2>
+<h2 style="margin-bottom: 0px">Synchronization</h2>
+<a href="#top" title="" style="font-size=50%">Back to Top</a>
 <h3><i>Problem</i></h3>
 <p>Synchronization is the biggest problem in a multi-threaded application. We need a way for processes to join together at some point, and to make sure that they do not execute the same parts of a program at the same time.
 </p>
