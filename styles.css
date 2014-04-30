@@ -1,9 +1,17 @@
 body
 {
     margin: auto;
-    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     width: 95%;
-    padding: 0px;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #0099CC;
+}
+
+html
+{
+    background-color: #B8DCE6;
 }
 
 h1
@@ -29,6 +37,7 @@ hr
 {
     margin-top: 30px;
     margin-bottom: 30px;
+    color: #0099CC;
 }
 
 a:link {
@@ -46,7 +55,7 @@ a:hover {
 
 .table
 {
-    border: 1px solid black;
+    border: 1px solid #007AA3;
     display:inline-block;
     padding-right: 20px;
 }
