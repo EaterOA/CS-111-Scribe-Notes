@@ -9,6 +9,11 @@ body
     border: 1px solid #0099CC;
 }
 
+.center
+{
+    text-align: center;
+}
+
 html
 {
     background-color: #B8DCE6;
