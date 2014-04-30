@@ -14,8 +14,15 @@
 <body>
 <header><h1><p align="center">Computer Science 111<br>
 Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
-<p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left"></header>
+<p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left">
+<nav>
+<ol>
+<li><a href="#met" title="Metrics Link">Scheduling Metrics</a>
+<li><a href="#pol" title="Policies Link">Scheduling Policies</a>
+<li><a href="#syn" title="Synch Link">Synchronization</a>
+</ol></nav></header>
 <section>
+<a name="met">
 <h2>Scheduling Metrics</h2>
 <p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of possible methods. What is important is 
 that we balance their various trade-offs and choose the best method for our needs. But how do we quantify the effectiveness of a scheduling policy in the first place?
@@ -71,6 +78,7 @@ However, this lowers utilization.
 </ul>
 </section>
 <section>
+<a name="pol">
 <h2>Scheduling Policies</h2>
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
 </p>
@@ -221,6 +229,7 @@ may degrade experience, but is not destructive. Some policies might include:
 </ul>
 </section>
 <section>
+<a name="syn">
 <h2>Synchronization</h2>
 <h3><i>Problem</i></h3>
 <p>Synchronization is the biggest problem in a multi-threaded application. We need a way for processes to join together at some point, and to make sure that they do not execute the same parts of a program at the same time.
