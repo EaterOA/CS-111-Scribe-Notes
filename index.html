@@ -38,15 +38,15 @@ similarly. In this case, we can think of a <b>CPU</b> like a single <b>factory</
 The sequence of events proceeds as thus:</p>
 <ol>
 <li>The process registers with the scheduler.<br>
-<li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this wait time can range from zero to infinity 
+<li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this <span style="color: blue"><b>wait time</b></span> can range from zero to infinity 
 depending on the policy.
-<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the response time.</li>
+<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the <span style="color: blue"><b>response time.</b></span></li>
 <ul>
 <li>NOTE: The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and 
 performing its job. An example of this is a load or splash screen for a slow application.</li></ul>
-<li>The process finishes. The time it takes to get from Step #1 to here is the turnaround time. The time it takes to get from Step #2 to here is the run time. In other
+<li>The process finishes. The time it takes to get from Step #1 to here is the <span style="color: blue"><b>turnaround time</b></span>. The time it takes to get from Step #2 to here is the <span style="color: blue"><b>run time</b></span>. In other
 words: turnaround time = run time + wait time.
-<li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the context switch time. More generally, 
+<li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the <span style="color: blue"><b>context switch time</b></span>. More generally, 
 a context switch occurs whenever the CPU stops doing one job and takes up another, not necessarily from the conclusion of one to the commencement of another.
 </ol>
 <p>These metrics are used to measure efficiency for a single process. Modern CPUs must juggle hundreds of processes, so it would be more useful to look at some 
@@ -54,9 +54,9 @@ aggregate metrics instead. Some of these are:</p>
 <ul>
 <li>Average wait, response, and turnaround times
 <li>Max wait, response, and turnaround times
-<li>Utilization, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of 
+<li><span style="color: blue"><b>Utilization</b></span>, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of 
 non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.
-<li>Throughput, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an 
+<li><span style="color: blue"><b>Throughput</b></span>, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an 
 influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</ul>
 <p>
 A scheduler chooses what metrics to prioritize. We often see a waterbed effect develop when choosing policies. For instance:</p>
@@ -74,11 +74,11 @@ However, this lowers utilization.
 <h2>Scheduling Policies</h2>
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
 </p>
-<p>A scheduler should address the problem of starvation, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
+<p>A scheduler should address the problem of <b>starvation</b>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
 </p>
 <div><p>Some common policies are as follows:<br><br>
 <b><u>Policy 1:</u></b> <i>The First-Come-First-Serve</i> <b>(FCFS)</b> Policy:<br><br>
-In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the arrival time as the determining metric.
+In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the <u>arrival time</u> as the determining metric.
 </p>
 <p><u>Example:</u><br><br>
 <img src="chart.png" alt="Process statistics" /><br><br>
@@ -98,13 +98,13 @@ Average response time: <b>7.5 + 1.5δ</b><br>
 </p>
 <p>Pros:
 <ul>
-<li>Because each process finishes before a context switch occurs, the total overhead time is minimized given multiple processes. No extra context switches are needed other than the initial on for every process.
-<li>In addition, because context switches are only done after the process is finished, starvation never occurs in a FCFS scheduler, assuming no pre-emption is done. 
+<li>Because each process finishes before a context switch occurs, the total overhead time is <b>minimized</b> given multiple processes. No extra context switches are needed other than the initial on for every process.
+<li>In addition, because context switches are only done after the process is finished, starvation <b>never occurs</b> in a FCFS scheduler, assuming no pre-emption is done. 
 </ul>
 Cons:
 <ul>
-<li>Average wait times may be very long depending on the order of arrival and the total runtime of each process. For instance, if an extremely long process precedes a number of short processes, each of the short processes needs to wait for the long process to finish before running, increasing the average wait time.
-<li>Similarly, average response and overhead time may not be optimal as well, if the long process is placed before a number of short ones.
+<li>Average <b>wait times</b> may be very long depending on the order of arrival and the total runtime of each process. For instance, if an extremely long process precedes a number of short processes, each of the short processes needs to wait for the long process to finish before running, increasing the average wait time.
+<li>Similarly, average <b>response</b> and <b>overhead</b> time may not be optimal as well, if the long process is placed before a number of short ones.
 </ul>
 How can we improve on the average wait, turnout, and response times? 
 </p></div>
@@ -134,11 +134,11 @@ Average turnout time: <b>9.25 + 1.5δ</b><br>
 Average response time: <b>6.25 + 1.5δ</b><br>
 Pros:
 <ul>
-<li>Faster average wait, turnout, and response times when compared to FCFS scheduling
+<li><b>Faster average wait, turnout, and response times</b> when compared to FCFS scheduling
 </ul>
 Cons:
 <ul>
-<li>Possible fairness problem that can cause starvation; what if the scheduler receives a large amount of smaller processes when there is already a large process waiting? Due to the SJF scheduler, all of the smaller processes would first be processed, leaving the larger process hanging. It is possible that this larger process never finishes, hence resulting in a starvation issue.
+<li>Possible fairness problem that can cause <b>starvation</b>; what if the scheduler receives a large amount of smaller processes when there is already a large process waiting? Due to the SJF scheduler, all of the smaller processes would first be processed, leaving the larger process hanging. It is possible that this larger process never finishes, hence resulting in a starvation issue.
 </ul>
 </div>
 <div>
@@ -153,17 +153,17 @@ At the end, no context switching needs to be done since all other processes are 
 <br><br>
 Pros:
 <ul>
-<li>No starvation occurs in this policy since the scheduler is constantly rotating between all processes, not leaving any single process unattended to.
-<li>Low average wait times because all processes are reached at least once in the round trip before doing the same again. In this scenario, the average wait time for all processes is 1 + 2.5δ, much lower than the two previous policies.
+<li><b>No starvation</b> occurs in this policy since the scheduler is constantly rotating between all processes, not leaving any single process unattended to.
+<li><b>Low average wait times</b> because all processes are reached at least once in the round trip before doing the same again. In this scenario, the average wait time for all processes is 1 + 2.5δ, much lower than the two previous policies.
 </ul>
 Cons:
 <ul>
-<li>Because so much switching is done in the scheduler, a large amount of overhead from context switching is present. Each time the scheduler makes a switch, the overhead time needs to be considered in the total run time.
+<li>Because so much switching is done in the scheduler, a <b>large amount of overhead</b> from context switching is present. Each time the scheduler makes a switch, the overhead time needs to be considered in the total run time.
 </ul>
 </div>
 <b><u>Priority Scheduling</u></b>
 <p>
-There are different ways of gauging which item to schedule first. The convention by which a process is measured against another in order to determine order is its priority. A low-valued priority can mean that it is scheduled first or that it is scheduled last. For convention, we will say that a lower value priority means that it will be scheduled first.
+There are different ways of gauging which item to schedule first. The convention by which a process is measured against another in order to determine order is its <b>priority</b>. A low-valued priority can mean that it is scheduled first or that it is scheduled last. For convention, we will say that a lower value priority means that it will be scheduled first.
 
 Priority does not necessarily have to consist of a single factor that determines whether a process is scheduled before another, such as run time. It can comprise of several different aspects. For instance, the Linux scheduler has the following formula to compute priority:
 </p>
@@ -171,7 +171,7 @@ Priority does not necessarily have to consist of a single factor that determines
 Priority = niceness + total CPU time + (- time since the last run)
 </p>
 <p>Niceness is a utility property that is used to determine a priority level to assign to a process, though it is not the only factor. Its general default value is 0. A user can change a process’s niceness through the nice command to improve performance on a specific process.
-Because the scheduler relies on the total CPU time and the time since the last run, it is not entirely a best-effort scheduler, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
+Because the scheduler relies on the total CPU time and the time since the last run, it is <b>not entirely a best-effort scheduler</b>, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
 
 <h3><i>Hard Real-Time Policies</i></h3>
 <p>For systems in which process turnaround may mean life or death rather than just inconvenience 
@@ -246,11 +246,11 @@ balance = melinda_temp;<br>
 </p>
 <p>This is a problem with multi-threading. Even in a single-threaded application however, the existence of signals can also cause the same problems.</p>
 <h3><i>Solution</i></h3>
-<p>Now that we know the problem, we need some way to resolve it. One possible option is to use locks. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect critical sections, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
+<p>Now that we know the problem, we need some way to resolve it. One possible option is to use <span style="color: blue"><b>locks</b></span>. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect <span style="color: blue"><b>critical sections</b></span>, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
 </p>
 <p>Locks are nice conceptually, but they have certain pitfalls associated with them. Suppose a bank wants to be able to audit its accounts, which may take a long time. If it obtains a global lock, then during that time no customers will be able to access their money. What about if we just lock on a per-account basis? Then actions like transfer which requires multiple locks may give rise to deadlocking issues, in which two agents refuse to yield their locks to each other.
 </p>
-<p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for serializability. Consider the following:
+<p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for <span style="color: blue"><b>serializability</b></span>. Consider the following:
 </p>
 <p>[ Image of two threads performing actions independently ]
 </p>
@@ -259,7 +259,7 @@ balance = melinda_temp;<br>
 <br>t → A1, A4, A2, A5, A6, A3, A3<br>
 Either explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
 </p>
-<p>One way to obtain serializability is to use atomicity. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
+<p>One way to obtain serializability is to use <span style="color: blue"><b>atomicity</b></span>. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
 </p>
 </section>
 </body>
