@@ -61,7 +61,7 @@ similarly. In this case, we can think of a <b>CPU</b> like a single <b>factory</
 </ul>
 <p>Here is a pictorial representation of some metrics we can derive from this model:<br><br>
 
-[ Image of timeline for stages of a process ]<br><br>
+<img src="terms.png" alt="Terms definitions"><br><br>
 
 The sequence of events proceeds as thus:</p>
 <ol>
@@ -244,7 +244,7 @@ some characteristics of soft real-time systems:
 
 periodic frame rendering and background wi-fi scanning as thus:<br><br>
 
-[ Image of blocks of video frames over blocks of wifi scanning ]<br><br>
+<img src="soft.png" alt="Blocks of frames and scans"><br><br>
 
 Ideally, every frame and scan are performed on time. Occasionally missing one of two blocks 
 
@@ -291,12 +291,10 @@ balance = melinda_temp;<br>
 </p>
 <p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for <span style="color: blue"><b>serializability</b></span>. Consider the following:
 </p>
-<p>[ Image of two threads performing actions independently ]
-</p>
-<p>For an observable behavior to be serializable, we should be able to explain events as if they were done sequentially. Two possible sequence of events for the above might be:
-<br>t → A1, A4, A5, A2, A6, A3, A3
-<br>t → A1, A4, A2, A5, A6, A3, A3<br>
-Either explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
+<br><img src="hard1.png" alt="Two threads doing independent actions"><br>
+<p>For an observable behavior to be serializable, we should be able to explain events as if they were done sequentially. A possible sequence of events for the above might be:
+<br><img src="hard2.png" alt="A single process performing actions"><br>
+This explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
 </p>
 <p>One way to obtain serializability is to use <span style="color: blue"><b>atomicity</b></span>. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
 </p>
