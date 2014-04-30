@@ -1,0 +1,75 @@
+body
+{
+    margin: auto;
+    margin-bottom: 50px;
+    width: 95%;
+    padding: 0px;
+}
+
+h1
+{
+    color: #222244;
+}
+
+h2
+{
+    color: #222244;
+    font-size: 170%;
+    margin-bottom: 0px;
+}
+
+h3
+{
+    color: #444466;
+    font-size: 130%;
+    font-style: italic;
+}
+
+hr
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+a:link {
+    color: #333399;
+    text-decoration: none;
+}
+a:visited {
+    color: #9999aa;
+    text-decoration: none;
+}
+a:hover {
+    color: #222;
+    text-decoration: underline;
+}
+
+.table
+{
+    border: 1px solid black;
+    display:inline-block;
+    padding-right: 20px;
+}
+
+.shift
+{
+    margin-left: 15px;
+}
+
+.top
+{
+    font-style: italic;
+    font-size: 80%;
+}
+
+.key
+{
+    color: #000099;
+    font-weight: bold;
+}
+
+.code
+{
+    margin-left: 20px;
+    font-family: "Courier New", Courier, monospace;
+}

@@ -1,49 +1,48 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-
 <title>Lecture 9 Scribe Notes</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<link rel="stylesheet" type="text/css" href="/styles.css" />
-
+<link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 
 <body>
 <header><h1><p align="center">Computer Science 111<br>
 Lecture 8: Scheduling Metrics, Scheduling Policies, and Synchronization</h1></p>
-<p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p><hr align="left">
+<p align="center">by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14</p>
+<hr>
+
 <nav>
-<a name="top">
-<h2 style="margin-bottom: 0px">Table of Contents</h2>
-<div style="border: 3px solid black; display:inline-block; padding-right: 20px;">
+<a name="top"></a>
+<h2>Table of Contents</h2>
+<div class="table">
 <ol>
-<li><a href="#met" title="Metrics Link">Scheduling Metrics</a>
+<li><a href="#met" title="Metrics Link">Scheduling Metrics</a></li>
 <ul>
 <li><a href="#model" title="Subsection Model Link">Model</a></li>
 </ul>
-<li><a href="#pol" title="Policies Link">Scheduling Policies</a>
+<li><a href="#pol" title="Policies Link">Scheduling Policies</a></li>
 <ul>
-<li><a href="#fcfs" title="fcfs Link">First Come First Serve Policy</a>
-<li><a href="#sjf" title="sjf Link">Shortest Job First Policy</a>
-<li><a href="#rr" title="rr Link">Round Robin Policy</a>
-<li><a href="#priority" title="priorty Link">Priority Scheduling</a>
-<li><a href="#hard" title="hard Link">Hard Real-Time Policies</a>
-<li><a href="#soft" title="soft Link">Soft Real-Time Policies</a>
+<li><a href="#fcfs" title="fcfs Link">First Come First Serve Policy</a></li>
+<li><a href="#sjf" title="sjf Link">Shortest Job First Policy</a></li>
+<li><a href="#rr" title="rr Link">Round Robin Policy</a></li>
+<li><a href="#priority" title="priorty Link">Priority Scheduling</a></li>
+<li><a href="#hard" title="hard Link">Hard Real-Time Policies</a></li>
+<li><a href="#soft" title="soft Link">Soft Real-Time Policies</a></li>
 </ul>
-<li><a href="#syn" title="Synch Link">Synchronization</a>
+<li><a href="#syn" title="Synch Link">Synchronization</a></li>
 <ul>
-<li><a href="#problem" title="Problem Link">Problem</a>
-<li><a href="#solution" title="Solution Link">Solution</a>
+<li><a href="#problem" title="Problem Link">Problem</a></li>
+<li><a href="#solution" title="Solution Link">Solution</a></li>
 </ul>
 </ol>
 </div></nav></header>
-<section>
-<a name="met">
-<h2 style="margin-bottom: 0px">Scheduling Metrics<br></h2>
-<a href="#top" title="" style="font-size=50%">Back to Top</a>
+
+<a name="met"></a>
+<h2>Scheduling Metrics<br></h2>
+<a href="#top" class="top">Back to Top</a>
+<section class="shift">
 <p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of possible methods. What is important is 
 that we balance their various trade-offs and choose the best method for our needs. But how do we quantify the effectiveness of a scheduling policy in the first place?
 </p>
@@ -51,78 +50,76 @@ that we balance their various trade-offs and choose the best method for our need
 One way is to use well-defined metrics. Just as we have taken inspiration from the auto industry in designing schedulers, we can also model our policies and metrics 
 similarly. In this case, we can think of a <b>CPU</b> like a single <b>factory</b>, and the <b>processes</b> like <b>cars</b> to be built.
 </p>
-<a name="model">
-<h3><i>Model</i></h3>
+<a name="model"></a>
+<h3>Model</h3>
 <p>First, some assumptions. In this model, we adhere to these rules:</p>
 <ul>
-<li>There is only <b>one CPU</b> that can execute at most <b>one process</b> at any given time
-<li>Memory is not an issue
-<li>Processes arrive at arbitrary times and in arbitrary order
+<li>There is only <b>one CPU</b> that can execute at most <b>one process</b> at any given time</li>
+<li>Memory is not an issue</li>
+<li>Processes arrive at arbitrary times and in arbitrary order</li>
 </ul>
-<p>Here is a pictorial representation of some metrics we can derive from this model:<br><br>
-
-<img src="terms.png" alt="Terms definitions"><br><br>
-
+<p>Here is a pictorial representation of some metrics we can derive from this model:
+<br><img src="terms.png" alt="Terms definitions"><br>
 The sequence of events proceeds as thus:</p>
 <ol>
-<li>The process registers with the scheduler.<br>
-<li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this <span style="color: blue"><b>wait time</b></span> can range from zero to infinity 
-depending on the policy.
-<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the <span style="color: blue"><b>response time.</b></span></li>
+<li>The process registers with the scheduler.</li>
+<li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this <span class="key">wait time</span> can range from zero to infinity 
+depending on the policy.</li>
+<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the <span class="key">response time.</span></li>
 <ul>
-<li>NOTE: The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and 
+<li>NOTE: The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and </li>
 performing its job. An example of this is a load or splash screen for a slow application.</li></ul>
-<li>The process finishes. The time it takes to get from Step #1 to here is the <span style="color: blue"><b>turnaround time</b></span>. The time it takes to get from Step #2 to here is the <span style="color: blue"><b>run time</b></span>. In other
+<li>The process finishes. The time it takes to get from Step #1 to here is the <span class="key">turnaround time</span>. The time it takes to get from Step #2 to here is the <span class="key">run time</span>. In other</li>
 words: turnaround time = run time + wait time.
-<li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the <span style="color: blue"><b>context switch time</b></span>. More generally, 
-a context switch occurs whenever the CPU stops doing one job and takes up another, not necessarily from the conclusion of one to the commencement of another.
+<li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the <span class="key">context switch time</span>. More generally, 
+a context switch occurs whenever the CPU stops doing one job and takes up another, not necessarily from the conclusion of one to the commencement of another.</li>
 </ol>
 <p>These metrics are used to measure efficiency for a single process. Modern CPUs must juggle hundreds of processes, so it would be more useful to look at some 
 aggregate metrics instead. Some of these are:</p>
 <ul>
-<li>Average wait, response, and turnaround times
-<li>Max wait, response, and turnaround times
-<li><span style="color: blue"><b>Utilization</b></span>, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of 
-non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.
-<li><span style="color: blue"><b>Throughput</b></span>, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an 
-influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</ul>
+<li>Average wait, response, and turnaround times</li>
+<li>Max wait, response, and turnaround times</li>
+<li><span class="key">Utilization</span>, which is the amount of time the CPU spends doing useful work. Here, useful work refers to running processes. For our purposes, the primary sources of 
+non-useful work include deciding what to run next, storing and loading process stack/registers, and any other housekeeping tasks performed by the kernel.</li>
+<li><span class="key">Throughput</span>, which is the number of processes completed in a given timeframe. Throughput is tied closely to utilization, but can be subtly different. Given an 
+influx of quick jobs and slow jobs, always picking quick jobs to run increases throughput even if utilization is the same regardless of order.</li></ul>
 <p>
 A scheduler chooses what metrics to prioritize. We often see a waterbed effect develop when choosing policies. For instance:</p>
 <ul>
-<li>Utilization can be increased by disabling preemption and focusing on one job at a time.
+<li>Utilization can be increased by disabling preemption and focusing on one job at a time.</li>
 
 However, this increases wait time for other processes.
-<li>Conversely, frequent preemption leads to lower wait time, but lower utilization.
-<li>Wait time can be lowered by switching to new processes as soon as they arrive.
-
-However, this lowers utilization.
+<li>Conversely, frequent preemption leads to lower wait time, but lower utilization.</li>
+<li>Wait time can be lowered by switching to new processes as soon as they arrive. However, this lowers utilization.</li>
 </ul>
 </section>
-<section>
-<a name="pol">
-<h2 style="margin-bottom: 0px">Scheduling Policies</h2>
-<a href="#top" title="" style="font-size=50%">Back to Top</a>
+<hr>
+
+<a name="pol"></a>
+<h2>Scheduling Policies</h2>
+<a href="#top" class="top">Back to Top</a>
+<section class="shift">
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
 </p>
 <p>A scheduler should address the problem of <b>starvation</b>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
 </p>
 <div><p>Some common policies are as follows:<br><br>
-<a name="fcfs">
-<b><u>Policy 1:</u></b> <i>The First-Come-First-Serve</i> <b>(FCFS)</b> Policy:<br><br>
+<a name="fcfs"></a>
+<h3>The First-Come-First-Serve (FCFS) Policy:</h3>
 In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the <u>arrival time</u> as the determining metric.
-</p>
-<p><u>Example:</u><br><br>
-<img src="chart.png" alt="Process statistics" /><br><br>
-Having the CPU switch processes also takes an overhead time; this is denoted by δ.<br><br>
-<img src="fcfs.png" alt="FCFS timeline" /><br><br>
+
+<p><u>Example:</u>
+<br><img src="chart.png" alt="Process statistics" /><br>
+Having the CPU switch processes also takes an overhead time; this is denoted by δ.
+<br><img src="fcfs.png" alt="FCFS timeline" /><br>
 What does each wait time look like?<br><br>
 Process A: First process, so wait time is <b>0</b><br>
 Process B: Total time from A + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>4 + δ</b><br><br>
+<span class="shift">Total wait time is <b>4 + δ</b></span><br><br>
 Process C: Total time from B + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>5 + 2δ</b><br>
+<span class="shift">Total wait time is <b>5 + 2δ</b></span><br>
 Process D: Total time from C + Context switching;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait time is <b>13 + 3δ</b><br><br>
+<span class="shift">Total wait time is <b>13 + 3δ</b></span><br><br>
 Average wait time: <b>5.5 + 1.5δ</b><br>
 Average turnaround time: <b>10.5 + 1.5δ</b><br>
 Average response time: <b>7.5 + 1.5δ</b><br>
@@ -138,28 +135,27 @@ Cons:
 <li>Similarly, average <b>response</b> and <b>overhead</b> time may not be optimal as well, if the long process is placed before a number of short ones.
 </ul>
 How can we improve on the average wait, turnout, and response times? 
-</p></div>
+</div>
 <div>
-<a name="sjf">
-<b><u>Policy 2:</u></b> <i>The Shortest Job First</i> <b>(SJF)</b> Policy:<br><br>
+<a name="sjf"></a>
+<h3>The Shortest Job First (SJF) Policy:</h3>
 A shortest job first scheduler schedules new items into the queue based on the total runtime of the process. If there are other existing processes waiting that have a longer runtime than the new one, then the new process will be scheduled before the longer, older ones, giving it more priority.
 <br><br>
 Using the previous example:
-<br><br>
-<img src="sjf.png" alt="SJF timeline" />
-<br><br>
+<br><img src="sjf.png" alt="SJF timeline" /><br>
 Wait times:
 <br><br>
 Process A: First process;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>0</b><br><br>
+<span class="shift">Total wait = <b>0</b></span>
+<br><br>
 Process B: Total Process A time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait =  <b>4 + δ</b>
+<span class="shift">Total wait =  <b>4 + δ</b></span>
 <br><br>
 Process D: Total Process B time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>4 + 2δ</b>
+<span class="shift">Total wait = <b>4 + 2δ</b></span>
 <br><br>
 Process C: Total process D time + Context Switching<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total wait = <b>9 + 3δ</b>
+<span class="shift">Total wait = <b>9 + 3δ</b></span>
 <br><br>
 Average wait time: <b>4.25 + 1.5δ</b><br>
 Average turnout time: <b>9.25 + 1.5δ</b><br>
@@ -174,14 +170,12 @@ Cons:
 </ul>
 </div>
 <div>
-<a name="rr">
-<b><u>Policy 3:</u></b> <i>The Round Robin</i> Policy:<br><br>
+<a name="rr"></a>
+<h3>The Round Robin Policy:</h3>
 The Round Robin strategy employs the use of <b>preemption</b>, in which the scheduler temporarily interrupts one process and switches to another. It combines this with a FCFS model and constantly switches between processes as they are added to the scheduler. The scheduler switches the CPU to another process after every time interval, and includes any new incoming processes in the rotation after it finishes a cycle.
 <br><br>
 Using the previous example again:
-<br><br>
-<img src="roundrobin.png" alt="RR timeline" />
-<br><br>
+<br><img src="roundrobin.png" alt="RR timeline" /><br>
 At the end, no context switching needs to be done since all other processes are finished.
 <br><br>
 Pros:
@@ -194,8 +188,8 @@ Cons:
 <li>Because so much switching is done in the scheduler, a <b>large amount of overhead</b> from context switching is present. Each time the scheduler makes a switch, the overhead time needs to be considered in the total run time.
 </ul>
 </div>
-<a name="priority">
-<b><u>Priority Scheduling</u></b>
+<a name="priority"></a>
+<h3>Priority Scheduling</h3>
 <p>
 There are different ways of gauging which item to schedule first. The convention by which a process is measured against another in order to determine order is its <b>priority</b>. A low-valued priority can mean that it is scheduled first or that it is scheduled last. For convention, we will say that a lower value priority means that it will be scheduled first.
 
@@ -206,8 +200,8 @@ Priority = niceness + total CPU time + (- time since the last run)
 </p>
 <p>Niceness is a utility property that is used to determine a priority level to assign to a process, though it is not the only factor. Its general default value is 0. A user can change a process’s niceness through the nice command to improve performance on a specific process.
 Because the scheduler relies on the total CPU time and the time since the last run, it is <b>not entirely a best-effort scheduler</b>, and a process with a lower niceness may not necessarily beat out a process with a higher one.</p>
-<a name="hard">
-<h3><i>Hard Real-Time Policies</i></h3>
+<a name="hard"></a>
+<h3>Hard Real-Time Policies</h3>
 <p>For systems in which process turnaround may mean life or death rather than just inconvenience 
 
 (for instance, a nuclear power plant), a best-effort scheduler is not enough. Such systems often 
@@ -227,8 +221,8 @@ metric.
 <li>Use polling instead of interrupts, because asynchronicity is too unpredictable</ul>
 <li>Extremely application-specific
 </ul>
-<a name="soft">
-<h3><i>Soft Real-Time Policies</i></h3>
+<a name="soft"></a>
+<h3>Soft Real-Time Policies</h3>
 <p>
 As opposed to hard real-time, soft real-time systems can tolerate some missed deadlines, but 
 
@@ -242,9 +236,8 @@ some characteristics of soft real-time systems:
 <li>They are more generalized than hard real-time systems</ul>
 <p>An example application would be watching a video on a smartphone. The phone must handle 
 
-periodic frame rendering and background wi-fi scanning as thus:<br><br>
-
-<img src="soft.png" alt="Blocks of frames and scans"><br><br>
+periodic frame rendering and background wi-fi scanning as thus:
+<br><img src="soft.png" alt="Blocks of frames and scans"><br>
 
 Ideally, every frame and scan are performed on time. Occasionally missing one of two blocks 
 
@@ -255,12 +248,13 @@ may degrade experience, but is not destructive. Some policies might include:
 <li>Rate-monotonic scheduling, where small, frequently-run tasks are given higher priority to run
 </ul>
 </section>
-<section>
-<a name="syn">
-<h2 style="margin-bottom: 0px">Synchronization</h2>
-<a href="#top" title="" style="font-size=50%">Back to Top</a>
-<a name="problem">
-<h3><i>Problem</i></h3>
+<hr>
+<a name="syn"></a>
+<h2>Synchronization</h2>
+<a href="#top" class="top">Back to Top</a>
+<section class="shift">
+<a name="problem"></a>
+<h3>Problem</h3>
 <p>Synchronization is the biggest problem in a multi-threaded application. We need a way for processes to join together at some point, and to make sure that they do not execute the same parts of a program at the same time.
 </p>
 <p>Unfortunately, the default behavior for processes is unsynchronized, which leads to race conditions. This is an issue because race conditions are notoriously hard to debug. It is difficult to catch the problem automatically, given that they are so rare and intermittent. It is possible to run code thousands of times without fail only for it to break on the 1001th time due to a race condition. We want to be able to avoid race conditions, but we also want to do so using an efficient, non-intrusive, and clear method.
@@ -269,34 +263,33 @@ may degrade experience, but is not destructive. Some policies might include:
 </p>
 <p>
 Bill:<br>
-balance += deposit;<br>
-
+<span class="code">balance += deposit;</span><br><br>
 Melinda:<br>
-balance -= withdraw;<br>
+<span class="code">balance -= withdraw;</span><br>
 </p>
 <p>There is a race condition here. Hypothetically, it is possible for both to read the same balance at the same time, and depending on whose transaction occurs last, one of them will be nullified. For instance the following logical sequence of events may be executed:
 </p>
-<p>
+<p class="code">
 int bill_temp = balance + deposit;<br>
 int melinda_temp = balance - withdraw;<br>
 balance = bill_temp;<br>
 balance = melinda_temp;<br>
 </p>
 <p>This is a problem with multi-threading. Even in a single-threaded application however, the existence of signals can also cause the same problems.</p>
-<a name="solution">
-<h3><i>Solution</i></h3>
-<p>Now that we know the problem, we need some way to resolve it. One possible option is to use <span style="color: blue"><b>locks</b></span>. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect <span style="color: blue"><b>critical sections</b></span>, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
+<a name="solution"></a>
+<h3>Solution</h3>
+<p>Now that we know the problem, we need some way to resolve it. One possible option is to use <span class="key">locks</span>. Generally, locks can be used to guarantee that only a single agent can access a resource until that resource is unlocked for others to use. For multi-threaded applications, locks are used to protect <span class="key">critical sections</span>, or an area of code that accesses shared resources in a way that is vulnerable to race condition.
 </p>
 <p>Locks are nice conceptually, but they have certain pitfalls associated with them. Suppose a bank wants to be able to audit its accounts, which may take a long time. If it obtains a global lock, then during that time no customers will be able to access their money. What about if we just lock on a per-account basis? Then actions like transfer which requires multiple locks may give rise to deadlocking issues, in which two agents refuse to yield their locks to each other.
 </p>
-<p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for <span style="color: blue"><b>serializability</b></span>. Consider the following:
+<p>Many approaches to synchronicity will be covered in the next lecture, Lecture 9. For now, we just want to define some terms. When we say we want synchronicity, in essence we simply want to achieve an abstraction for <span class="key">serializability</span>. Consider the following:
 </p>
 <br><img src="hard1.png" alt="Two threads doing independent actions"><br>
 <p>For an observable behavior to be serializable, we should be able to explain events as if they were done sequentially. A possible sequence of events for the above might be:
 <br><img src="hard2.png" alt="A single process performing actions"><br>
 This explanation works, because it does not change the ultimate outcome of the events. Even if two events happened simultaneously, we can pretend that one happened before another as long as they don’t affect each other.
 </p>
-<p>One way to obtain serializability is to use <span style="color: blue"><b>atomicity</b></span>. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
+<p>One way to obtain serializability is to use <span class="key">atomicity</span>. Atomicity is the assurance that an action either occurs in full or doesn’t occur at all. This excludes actions that only perform a portion of its job, such as an interrupted download leaving a half-complete file.
 </p>
 </section>
 </body>
