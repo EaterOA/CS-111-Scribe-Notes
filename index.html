@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Lecture 9 Scribe Notes</title>
+<title>Lecture 8 Scribe Notes</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
@@ -46,7 +46,7 @@ by Vincent Wong, Eric Du, Jeffrey Shu<br>Lecture Date: 4/23/14
 <h2>Scheduling Metrics<br></h2>
 <a href="#top" class="top">Back to Top</a>
 <section class="shift">
-<p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of possible methods. What is important is 
+<p>There are many ways to write a scheduler. The various policies that we will see later only represents a small fraction of the possible methods. What is important is 
 that we balance their various trade-offs and choose the best method for our needs. But how do we quantify the effectiveness of a scheduling policy in the first place?
 </p>
 <p>
@@ -68,10 +68,10 @@ The sequence of events proceeds as thus:</p>
 <li>The process registers with the scheduler.</li>
 <li>The process is stalled for a duration of time, called the wait time, before it begins to run. As we will see, this <span class="key">wait time</span> can range from zero to infinity 
 depending on the policy.</li>
-<li>The process runs (perhaps intermittently) until it produces the first visible effect. The time it takes to get from Step #1 to here is the <span class="key">response time.</span> The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and performing its job. An example of this is a load or splash screen for a slow application.</li>
+<li>The process runs (perhaps intermittently) until it produces the first visible output. The time it takes to get from Step #1 to here is the <span class="key">response time.</span> The response time is an important element to consider for user-facing processes. A response provides the user an assurance that the process is running and performing its job. An example of this is a load or splash screen for a slow application.</li>
 <li>The process finishes. The time it takes to get from Step #1 to here is the <span class="key">turnaround time</span>. The time it takes to get from Step #2 to here is the <span class="key">run time</span>. <br>In other words: turnaround time = run time + wait time.</li>
 <li>The scheduler prepares to execute the next process. The gap between the end of process #1 and the start of process #2 is the <span class="key">context switch time</span>. More generally, 
-a context switch occurs whenever the CPU stops doing one job and takes up another, not necessarily from the conclusion of one to the commencement of another.</li>
+a context switch occurs whenever the CPU stops doing one job and takes up another, although not necessarily from the conclusion of one to the commencement of another.</li>
 </ol>
 <p>These metrics are used to measure efficiency for a single process. Modern CPUs must juggle hundreds of processes, so it would be more useful to look at some 
 aggregate metrics instead. Some of these are:</p>
@@ -98,12 +98,12 @@ A scheduler chooses what metrics to prioritize. We often see a waterbed effect d
 <section class="shift">
 <p>Scheduling policies are created based on how much each metric is valued in the scheduler. A policy is a tactic by the scheduler to determine the order in which processes run. While it would be ideal to improve all metrics, the waterbed effect causes one metric to worsen as another improves. Depending on the needs of the processes, different policies are used to determine how a scheduler should be designed. 
 </p>
-<p>A scheduler should address the problem of <b>starvation</b>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
+<p>A scheduler should address the problem of <span class="key">starvation</span>, in which some processes may be constantly denied resources from the CPU. It is possible that a process may never finish after it is started.
 </p>
 <div><p>Some common policies are as follows:<br><br>
 <a id="fcfs"></a>
 <h3>The First-Come-First-Serve (FCFS) Policy:</h3>
-In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the <u>arrival time</u> as the determining metric.
+In an FCFS model, every process runs in the order that they are fed to the scheduler, regardless of their runtime or their response time. This policy uses only the <span class="key">arrival time</span> as the determining metric.
 
 <p><u>Example:</u>
 <br><img src="chart.png" alt="Process statistics" /><br>
@@ -112,7 +112,7 @@ Having the CPU switch processes also takes an overhead time; this is denoted by 
 What does each wait time look like?<br><br>
 Process A: First process, so wait time is <b>0</b><br>
 Process B: Total time from A + Context switching;<br>
-<span class="shift">Total wait time is <b>4 + δ</b></span><br><br>
+<span class="shift">Total wait time is <b>4 + δ</b></span><br>
 Process C: Total time from B + Context switching;<br>
 <span class="shift">Total wait time is <b>5 + 2δ</b></span><br>
 Process D: Total time from C + Context switching;<br>
@@ -123,7 +123,7 @@ Average response time: <b>7.5 + 1.5δ</b><br>
 </p>
 <p>Pros:
 <ul>
-<li>Because each process finishes before a context switch occurs, the total overhead time is <b>minimized</b> given multiple processes. No extra context switches are needed other than the initial on for every process.
+<li>Because each process finishes before a context switch occurs, the total overhead time is <b>minimized</b> given multiple processes. No extra context switches are needed other than the initial one for every process.
 <li>In addition, because context switches are only done after the process is finished, starvation <b>never occurs</b> in a FCFS scheduler, assuming no pre-emption is done. 
 </ul>
 Cons:
@@ -156,7 +156,7 @@ Process C: Total process D time + Context Switching<br>
 <br><br>
 Average wait time: <b>4.25 + 1.5δ</b><br>
 Average turnout time: <b>9.25 + 1.5δ</b><br>
-Average response time: <b>6.25 + 1.5δ</b><br>
+Average response time: <b>6.25 + 1.5δ</b><br><br>
 Pros:
 <ul>
 <li><b>Faster average wait, turnout, and response times</b> when compared to FCFS scheduling
@@ -169,7 +169,7 @@ Cons:
 <div>
 <a id="rr"></a>
 <h3>The Round Robin Policy:</h3>
-The Round Robin strategy employs the use of <b>preemption</b>, in which the scheduler temporarily interrupts one process and switches to another. It combines this with a FCFS model and constantly switches between processes as they are added to the scheduler. The scheduler switches the CPU to another process after every time interval, and includes any new incoming processes in the rotation after it finishes a cycle.
+The Round Robin strategy employs the use of <span class="key">preemption</span>, in which the scheduler temporarily interrupts one process and switches to another. It combines this with a FCFS model and constantly switches between processes as they are added to the scheduler. The scheduler switches the CPU to another process after every time interval, and includes any new incoming processes in the rotation after it finishes a cycle.
 <br><br>
 Using the previous example again:
 <br><img src="roundrobin.png" alt="RR timeline" /><br>
